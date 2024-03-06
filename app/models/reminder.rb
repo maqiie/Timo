@@ -5,7 +5,7 @@ class Reminder < ApplicationRecord
   has_one_attached :attachment
   
   after_create :create_notification
-
+  validates :repeat_interval_unit, inclusion: { in: %w(day week month) }
   validates :title, presence: true
   validates :due_date, presence: true
   validates :repeat_interval, presence: true

@@ -1,5 +1,5 @@
 class RemindersController < ApplicationController
-    before_action :authenticate_user!
+    # before_action :authenticate_user!
     def index
         if params[:query].present?
           @reminders = current_user.reminders.search(params[:query])
@@ -15,25 +15,51 @@ class RemindersController < ApplicationController
     def new
       @reminder = current_user.reminders.build
     end
+
+    # def create
+    #   @reminder = current_user.reminders.new(reminder_params)
+  
+    #   if @reminder.save
+    #     if @reminder.repeat_interval.present? && @reminder.repeat_interval_unit.present?
+    #       schedule_repeating_reminders(@reminder)
+    #     end
+    #   render json: { status: 'success', reminder: @reminder }
+    #   else
+    #     render :new
+    #   end
+    # end
     def create
       @reminder = current_user.reminders.new(reminder_params)
+      
+      if note_params.present? # Check if note parameters are present
+        @note = current_user.notes.create(note_params)
+        @reminder.note = @note if @note.persisted? # Associate the note with the reminder
+      end
   
       if @reminder.save
         if @reminder.repeat_interval.present? && @reminder.repeat_interval_unit.present?
           schedule_repeating_reminders(@reminder)
         end
-        redirect_to reminders_path, notice: 'Reminder created successfully.'
+        render json: { status: 'success', reminder: @reminder }
       else
         render :new
       end
     end
   
   
+   
  
+
+    
+
+  
+    def note_params
+      params.require(:note).permit(:content)
+    end
   
     def schedule_repeating_reminders(reminder)
       case reminder.repeat_interval_unit
-      when 'daily'
+      when 'daily', 'day' # Add 'day' as a valid value
         create_daily_repeating_reminders(reminder)
       when 'weekly'
         create_weekly_repeating_reminders(reminder)
@@ -77,11 +103,21 @@ class RemindersController < ApplicationController
       redirect_to reminders_url, notice: 'Reminder was successfully destroyed.'
     end
   
+    # private
+    # def reminder_params
+    #   params.require(:reminder).permit(:title, :description, :due_date, :repeat_interval, :repeat_interval_unit,:attachment )
+    # end
+  
+  
+    # def reminder_params
+    #   params.require(:reminder).permit(:title, :due_date, :description, :repeat_interval, :repeat_interval_unit, :attachment)
+    # end
     private
+
+   
     def reminder_params
-      params.require(:reminder).permit(:title, :description, :due_date, :repeat_interval, :repeat_interval_unit,:attachment)
+      params.require(:reminder).permit(:title, :due_date, :description, :repeat_interval, :repeat_interval_unit, :attachment)
     end
   
-    
   end
   
