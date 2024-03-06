@@ -3,5 +3,9 @@ Rails.application.routes.draw do
     registrations: 'auth/registrations'
   }
 
-  resources :posts
+
+  resources :reminders
+  resources :notes
+
+
 end
