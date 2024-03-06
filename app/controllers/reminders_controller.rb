@@ -1,8 +1,11 @@
 class RemindersController < ApplicationController
     before_action :authenticate_user!
-  
     def index
-        @reminders = current_user.reminders.order(:due_date)
+        if params[:query].present?
+          @reminders = current_user.reminders.search(params[:query])
+        else
+          @reminders = current_user.reminders.order(:due_date)
+        end
       end
       
     def show
@@ -12,15 +15,48 @@ class RemindersController < ApplicationController
     def new
       @reminder = current_user.reminders.build
     end
-  
     def create
-      @reminder = current_user.reminders.build(reminder_params)
+      @reminder = current_user.reminders.new(reminder_params)
+  
       if @reminder.save
-        redirect_to @reminder, notice: 'Reminder was successfully created.'
+        if @reminder.repeat_interval.present? && @reminder.repeat_interval_unit.present?
+          schedule_repeating_reminders(@reminder)
+        end
+        redirect_to reminders_path, notice: 'Reminder created successfully.'
       else
         render :new
       end
     end
+  
+  
+ 
+  
+    def schedule_repeating_reminders(reminder)
+      case reminder.repeat_interval_unit
+      when 'daily'
+        create_daily_repeating_reminders(reminder)
+      when 'weekly'
+        create_weekly_repeating_reminders(reminder)
+      # Add more cases for other repeat_interval_units (monthly, yearly, etc.)
+      else
+        # Default case if no valid repeat_interval_unit is provided
+        Rails.logger.error("Invalid repeat_interval_unit: #{reminder.repeat_interval_unit}")
+      end
+    end
+    
+    private
+    
+    def create_daily_repeating_reminders(reminder)
+      # Add logic to schedule daily repeating reminders
+      # For example, you can create a background job to handle the scheduling
+    end
+    
+    def create_weekly_repeating_reminders(reminder)
+      # Add logic to schedule weekly repeating reminders
+      # For example, you can create a background job to handle the scheduling
+    end
+    
+
   
     def edit
       @reminder = current_user.reminders.find(params[:id])
@@ -42,9 +78,10 @@ class RemindersController < ApplicationController
     end
   
     private
-  
     def reminder_params
-      params.require(:reminder).permit(:title, :description, :due_date)
+      params.require(:reminder).permit(:title, :description, :due_date, :repeat_interval, :repeat_interval_unit,:attachment)
     end
+  
+    
   end
   

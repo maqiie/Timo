@@ -6,6 +6,10 @@ Rails.application.routes.draw do
 
   resources :reminders
   resources :notes
+resources :profiles, only: [:show, :edit, :update]
+resources :notifications, only: [:index, :create]
+
+
 
 
 end

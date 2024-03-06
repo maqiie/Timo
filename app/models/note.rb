@@ -1,2 +1,5 @@
 class Note < ApplicationRecord
-end
+    belongs_to :user
+    has_one :reminder
+  end
+  
