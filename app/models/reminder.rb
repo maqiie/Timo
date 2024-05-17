@@ -39,6 +39,7 @@ class Reminder < ApplicationRecord
   validates :due_date, presence: true
   validates :repeat_interval, presence: true, allow_blank: true
   validates :repeat_interval_unit, inclusion: { in: %w[day week month] }, allow_blank: true
+  validates :user_id, presence: true
 
   validate :due_date_cannot_be_in_the_past
 
