@@ -1,3 +1,4 @@
+
 # class Reminder < ApplicationRecord
 #   belongs_to :user
 #   belongs_to :note, optional: true
@@ -5,11 +6,12 @@
 #   has_one_attached :attachment
   
 #   after_create :create_notification
-#   validates :repeat_interval_unit, inclusion: { in: %w(day week month) }
+#   validates :repeat_interval_unit, inclusion: { in: %w(day week month) }, allow_blank: true
 #   validates :title, presence: true
 #   validates :due_date, presence: true
-#   validates :repeat_interval, presence: true
-#   validates :repeat_interval_unit, presence: true, inclusion: { in: %w[day week month] }
+#   validates :repeat_interval, presence: true, allow_blank: true
+#   validates :repeat_interval_unit, inclusion: { in: %w[day week month] }, allow_blank: true
+#   # validates :user_id, presence: true
 
 #   validate :due_date_cannot_be_in_the_past
 
@@ -34,12 +36,13 @@ class Reminder < ApplicationRecord
   has_one_attached :attachment
   
   after_create :create_notification
-  validates :repeat_interval_unit, inclusion: { in: %w(day week month) }, allow_blank: true
+
   validates :title, presence: true
   validates :due_date, presence: true
+  validates :duration, presence: true
+  validates :repeat_interval_unit, inclusion: { in: %w(day week month) }, allow_blank: true
   validates :repeat_interval, presence: true, allow_blank: true
   validates :repeat_interval_unit, inclusion: { in: %w[day week month] }, allow_blank: true
-  validates :user_id, presence: true
 
   validate :due_date_cannot_be_in_the_past
 
