@@ -7,6 +7,8 @@ gem 'devise_token_auth'
 gem 'rack-cors'
 gem "jsonapi-serializer"
 gem 'cancancan'
+gem 'sidekiq'
+
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.0.7"

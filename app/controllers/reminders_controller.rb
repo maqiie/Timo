@@ -246,6 +246,7 @@
 #     reminder.attributes.merge('due_date' => reminder.due_date.in_time_zone('Africa/Nairobi').strftime('%Y-%m-%d %H:%M:%S'))
 #   end
 # end
+
 class RemindersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_reminder, only: [:show, :update, :destroy]
@@ -279,12 +280,55 @@ class RemindersController < ApplicationController
       render json: { status: 'error', message: 'Failed to create reminder', errors: @reminder.errors }, status: :unprocessable_entity
     end
   end
+ 
   
 
   def destroy
     @reminder.destroy
     head :no_content
   end
+
+  def complete
+    @reminder = current_user.reminders.find_by(id: params[:id])
+    unless @reminder
+      render json: { error: 'Reminder not found or unauthorized' }, status: :not_found
+      return
+    end
+  
+    if @reminder.update(completed: true)
+      # Create a new entry in the completed_tasks table
+      CompletedTask.create(
+        title: @reminder.title,
+        description: @reminder.description,
+        due_date: @reminder.due_date,
+        user: current_user
+      )
+      render json: { status: 'success', message: 'Reminder completed successfully', reminder: convert_reminder_to_local_time(@reminder) }
+    else
+      render json: { status: 'error', message: 'Failed to complete reminder', errors: @reminder.errors }, status: :unprocessable_entity
+    end
+  end
+  # def complete
+  #   @reminder = current_user.reminders.find_by(id: params[:id])
+  #   unless @reminder
+  #     render json: { error: 'Reminder not found or unauthorized' }, status: :not_found
+  #     return
+  #   end
+  
+  #   if @reminder.update(completed: true)
+  #     # Create a new entry in the completed_tasks table
+  #     CompletedTask.create(
+  #       title: @reminder.title,
+  #       description: @reminder.description,
+  #       due_date: @reminder.due_date,
+  #       user: current_user
+  #     )
+  #     render json: { status: 'success', message: 'Reminder completed successfully', reminder: convert_reminder_to_local_time(@reminder) }
+  #   else
+  #     render json: { status: 'error', message: 'Failed to complete reminder', errors: @reminder.errors }, status: :unprocessable_entity
+  #   end
+  # end
+
 
   def index_by_date
     date = Date.parse(params[:date])

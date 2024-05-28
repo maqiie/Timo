@@ -70,6 +70,7 @@ GEM
     builder (3.2.4)
     cancancan (3.5.0)
     concurrent-ruby (1.2.2)
+    connection_pool (2.4.1)
     crass (1.0.6)
     date (3.3.3)
     debug (1.8.0)
@@ -157,11 +158,18 @@ GEM
       thor (~> 1.0)
       zeitwerk (~> 2.5)
     rake (13.0.6)
+    redis-client (0.22.2)
+      connection_pool
     reline (0.3.7)
       io-console (~> 0.5)
     responders (3.1.0)
       actionpack (>= 5.2)
       railties (>= 5.2)
+    sidekiq (7.2.4)
+      concurrent-ruby (< 2)
+      connection_pool (>= 2.3.0)
+      rack (>= 2.2.4)
+      redis-client (>= 0.19.0)
     sprockets (4.2.0)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
@@ -193,12 +201,10 @@ DEPENDENCIES
   puma (~> 5.0)
   rack-cors
   rails (~> 7.0.7)
+  sidekiq
   sprockets-rails
   sqlite3 (~> 1.4)
   tzinfo-data
-
-RUBY VERSION
-   ruby 3.1.2p20
 
 BUNDLED WITH
    2.4.7
