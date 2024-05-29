@@ -1,13 +1,10 @@
-# app/controllers/notifications_controller.rb
 class NotificationsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @notifications = current_user.notifications
-    logger.info "Notifications loaded for user #{current_user.id}: #{@notifications.inspect}"
-    render json: @notifications
+    @notifications = current_user.notifications.upcoming
+    render json: { notifications: @notifications.select { |n| n.reminder.due_date > Time.current } }
   rescue => e
-    logger.error "Failed to load notifications: #{e.message}\n#{e.backtrace.join("\n")}"
-    render json: { error: 'Failed to load notifications' }, status: :internal_server_error
+    render json: { error: "Failed to fetch notifications: #{e.message}" }, status: :internal_server_error
   end
 end

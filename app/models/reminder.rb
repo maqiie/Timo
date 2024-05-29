@@ -21,6 +21,12 @@ class Reminder < ApplicationRecord
   def create_notification
     Notification.create(user: self.user, message: "Reminder: #{self.title}")
   end
+  def schedule
+    # Logic to determine the schedule based on the due date
+    # For example, you might want to return different schedules based on the due date
+    # Here's a simple example where it returns 'start' if the due date is in the past, otherwise it returns 'future'
+    self.due_date.past? ? 'start' : 'future'
+  end
 
   def self.search(query)
     where("title LIKE ? OR description LIKE ?", "%#{query}%", "%#{query}%")
