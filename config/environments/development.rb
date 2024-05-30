@@ -13,6 +13,9 @@ Rails.application.configure do
 
   config.active_storage.service = :local
 
+# config/environments/development.rb
+config.action_mailer.raise_delivery_errors = true
+config.action_mailer.logger = Logger.new(STDOUT)
 
   config.eager_load = false
 
@@ -21,6 +24,20 @@ Rails.application.configure do
 
   # Enable server timing
   config.server_timing = true
+  # config/environments/development.rb
+  # config/environments/development.rb or config/environments/production.rb
+config.action_mailer.delivery_method = :smtp
+config.action_mailer.smtp_settings = {
+  address:              'smtp.gmail.com',
+  port:                 587,
+  domain:               'example.com',
+  user_name:            ENV['GMAIL_USERNAME'],
+  password:             ENV['GMAIL_PASSWORD'],
+  authentication:       'plain',
+  enable_starttls_auto: true
+}
+
+
 
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.

@@ -8,6 +8,10 @@ gem 'rack-cors'
 gem "jsonapi-serializer"
 gem 'cancancan'
 gem 'sidekiq'
+gem 'mail'
+gem 'dotenv-rails', groups: [:development, :test]
+
+
 
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
