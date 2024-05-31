@@ -7,6 +7,7 @@ class NotificationsController < ApplicationController
   rescue => e
     render json: { error: "Failed to fetch notifications: #{e.message}" }, status: :internal_server_error
   end
+  
   def send_notification_email
     recipient = params[:recipient]
     message = params[:message]

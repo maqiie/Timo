@@ -86,13 +86,24 @@ class RemindersController < ApplicationController
     end
   end
 
-  def send_email_notification(notification)
+#   def send_email_notification(notification)
+#   user_email = notification.user.email
+#   subject = "Notification: #{notification.reminder.title}"
+#   message = notification.message
+  
+#   # Return email content as JSON
+#   render json: { user_email: user_email, subject: subject, message: message }
+# end
+def send_email_notification(notification)
   user_email = notification.user.email
   subject = "Notification: #{notification.reminder.title}"
   message = notification.message
-  
-  # Return email content as JSON
-  render json: { user_email: user_email, subject: subject, message: message }
+
+  # Send email using the NotificationMailer
+  NotificationMailer.notification_email(user_email, subject, message).deliver_now
+
+  # No need to render JSON response here, just return success status
+  { status: 'success', message: 'Email notification sent successfully' }
 end
 
   
