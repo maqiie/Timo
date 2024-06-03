@@ -9,6 +9,7 @@ Rails.application.configure do
   config.cache_classes = false
 
   # Do not eager load code on boot.
+  config.time_zone = 'Nairobi'
 
 
   config.active_storage.service = :local

@@ -83,7 +83,9 @@ module DeviseTokenAuthTwitter
     config.load_defaults 5.2
 
     # Set the timezone in config.rb
-    config.time_zone = 'Africa/Nairobi' # Example timezone - replace with your desired timezone
+    config.time_zone = 'Nairobi'
+
+    # config.time_zone = 'Africa/Nairobi' # Example timezone - replace with your desired timezone
     config.active_job.queue_adapter = :sidekiq
 
     # Settings in config/environments/* take precedence over those specified here.

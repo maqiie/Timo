@@ -5,6 +5,7 @@ Rails.application.configure do
 
   # Code is not reloaded between requests.
   config.cache_classes = true
+  config.time_zone = 'Nairobi'
 
 
   # config/environments/development.rb or config/environments/production.rb
