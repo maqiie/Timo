@@ -80,7 +80,7 @@ class RemindersController < ApplicationController
       { time: reminder.due_date - 1.hour, schedule: "1_hour" },
       { time: reminder.due_date - 30.minutes, schedule: "30_minutes" },
       { time: reminder.due_date - 5.minutes, schedule: "5_minutes" },
-      { time: reminder.due_date, schedule: "Now" }
+      { time: reminder.due_date, schedule: "" }
     ]
   
     notification_times.each do |nt|
