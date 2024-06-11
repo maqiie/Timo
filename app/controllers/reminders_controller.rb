@@ -144,6 +144,20 @@ class RemindersController < ApplicationController
     render json: @reminders.map { |reminder| convert_reminder_to_local_time(reminder) }
   end
 
+  def index_by_date
+    if params[:date].nil?
+      render json: { error: "Date parameter is missing" }, status: :bad_request
+      return
+    end
+  
+    date = Date.parse(params[:date])
+    reminders = Reminder.where(due_date: date.beginning_of_day..date.end_of_day)
+    render json: reminders
+  rescue ArgumentError => e
+    render json: { error: e.message }, status: :bad_request
+  end
+  
+
   def show
     render json: convert_reminder_to_local_time(@reminder)
   rescue ActiveRecord::RecordNotFound
@@ -226,43 +240,59 @@ class RemindersController < ApplicationController
     send_email_notification(notification)
   end
 
+  # def send_notifications(reminder)
+  #   notification_times = [
+  #     { time: reminder.due_date - 24.hours, schedule: "24_hours" },
+  #     { time: reminder.due_date - 1.hour, schedule: "1_hour" },
+  #     { time: reminder.due_date - 30.minutes, schedule: "30_minutes" },
+  #     { time: reminder.due_date - 5.minutes, schedule: "5_minutes" },
+  #     { time: reminder.due_date, schedule: "" }
+  #   ]
+
+  #   notification_times.each do |nt|
+  #     if nt[:time] > Time.current
+  #       notification = Notification.create(
+  #         user: reminder.user,
+  #         reminder: reminder,
+  #         message: "#{reminder.title} starts in #{nt[:schedule].split('_').first} #{nt[:schedule].split('_').last}",
+  #         schedule: nt[:schedule],
+  #         created_at: nt[:time]
+  #       )
+  #       logger.info "Notification created: #{notification.inspect}" if notification.persisted?
+  #       logger.error "Notification creation failed: #{notification.errors.full_messages}" unless notification.persisted?
+
+  #       send_email_notification(notification) # Send email for each notification
+  #     end
+  #   end
+  # end
   def send_notifications(reminder)
     notification_times = [
       { time: reminder.due_date - 24.hours, schedule: "24_hours" },
       { time: reminder.due_date - 1.hour, schedule: "1_hour" },
       { time: reminder.due_date - 30.minutes, schedule: "30_minutes" },
-      { time: reminder.due_date - 5.minutes, schedule: "5_minutes" },
-      { time: reminder.due_date, schedule: "" }
+      { time: reminder.due_date - 5.minutes, schedule: "5_minutes" }
     ]
-
-    notification_times.each do |nt|
-      if nt[:time] > Time.current
-        notification = Notification.create(
-          user: reminder.user,
-          reminder: reminder,
-          message: "#{reminder.title} starts in #{nt[:schedule].split('_').first} #{nt[:schedule].split('_').last}",
-          schedule: nt[:schedule],
-          created_at: nt[:time]
-        )
-        logger.info "Notification created: #{notification.inspect}" if notification.persisted?
-        logger.error "Notification creation failed: #{notification.errors.full_messages}" unless notification.persisted?
-
-        send_email_notification(notification) # Send email for each notification
-      end
+  
+    # Find the next relevant notification time
+    next_notification = notification_times.find { |nt| nt[:time] > Time.current }
+  
+    if next_notification
+      notification = Notification.create(
+        user: reminder.user,
+        reminder: reminder,
+        message: "#{reminder.title} starts in #{next_notification[:schedule].split('_').first} #{next_notification[:schedule].split('_').last}",
+        schedule: next_notification[:schedule],
+        created_at: next_notification[:time]
+      )
+      logger.info "Notification created: #{notification.inspect}" if notification.persisted?
+      logger.error "Notification creation failed: #{notification.errors.full_messages}" unless notification.persisted?
+  
+      send_email_notification(notification) # Send email for the next notification
     end
   end
+  
 
-  # def send_email_notification(notification)
-  #   user_email = notification.user.email
-  #   subject = "Notification: #{notification.reminder.title}"
-  #   message = notification.message
-
-  #   # Send email using the NotificationMailer
-  #   NotificationMailer.notification_email(user_email, subject, message).deliver_now
-
-  #   # No need to render JSON response here, just return success status
-  #   { status: 'success', message: 'Email notification sent successfully' }
-  # end
+ 
   def send_email_notification(notification)
     user = notification.user
     subject = "Notification: #{notification.reminder.title}"
