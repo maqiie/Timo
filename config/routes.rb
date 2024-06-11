@@ -12,8 +12,11 @@ Rails.application.routes.draw do
     member do
       patch 'complete'
       patch 'update' # Adding the route to update a reminder (task)
+      get :special_events
+
     end
   end
+  
 
 
   resources :tasks, only: [:index, :show, :create, :update, :destroy], controller: 'reminders'

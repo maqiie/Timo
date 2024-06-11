@@ -49,6 +49,7 @@ class Reminder < ApplicationRecord
   validates :duration, presence: true
   validates :repeat_interval_unit, inclusion: { in: %w(day week month) }, allow_blank: true
   validates :repeat_interval, presence: true, allow_blank: true
+  validates :duration, presence: true # Change to allow_nil: true or remove this line if duration is optional
 
   validate :due_date_cannot_be_in_the_past
 
@@ -81,4 +82,6 @@ class Reminder < ApplicationRecord
     end
     schedule
   end
+  scope :special_events, -> { where(is_special_event: true) }
+
 end
