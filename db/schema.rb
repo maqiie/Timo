@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_06_05_003255) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_11_122052) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -49,6 +49,15 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_05_003255) do
     t.index ["user_id"], name: "index_completed_tasks_on_user_id"
   end
 
+  create_table "friend_requests", force: :cascade do |t|
+    t.integer "sender_id"
+    t.integer "receiver_id"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "relationship_category"
+  end
+
   create_table "notes", force: :cascade do |t|
     t.string "title"
     t.text "content"
@@ -74,6 +83,17 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_05_003255) do
     t.text "content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "reminder_users", force: :cascade do |t|
+    t.integer "reminder_id", null: false
+    t.integer "user_id", null: false
+    t.integer "relationship_category", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["reminder_id", "user_id"], name: "index_reminder_users_on_reminder_id_and_user_id", unique: true
+    t.index ["reminder_id"], name: "index_reminder_users_on_reminder_id"
+    t.index ["user_id"], name: "index_reminder_users_on_user_id"
   end
 
   create_table "reminders", force: :cascade do |t|
@@ -118,8 +138,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_05_003255) do
     t.datetime "updated_at", null: false
     t.integer "role"
     t.date "birthday"
+    t.integer "receiver_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["receiver_id"], name: "index_users_on_receiver_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
@@ -129,6 +151,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_05_003255) do
   add_foreign_key "completed_tasks", "users"
   add_foreign_key "notes", "users"
   add_foreign_key "notifications", "users"
+  add_foreign_key "reminder_users", "reminders"
+  add_foreign_key "reminder_users", "users"
   add_foreign_key "reminders", "notes"
   add_foreign_key "reminders", "users"
 end

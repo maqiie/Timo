@@ -13,10 +13,25 @@ Rails.application.routes.draw do
       patch 'complete'
       patch 'update' # Adding the route to update a reminder (task)
       get :special_events
+      post 'add_user'
+      put 'complete'
 
     end
   end
+  resources :friend_requests, only: [:create] do
+    member do
+      put 'accept'
+      get 'received' 
+      put 'decline'
+      get 'sent'
+    end
+  end
   
+  
+  
+  get '/users/search', to: 'users#search'
+  get '/friend_requests/:user_id/accepted', to: 'friend_requests#accepted'
+
 
 
   resources :tasks, only: [:index, :show, :create, :update, :destroy], controller: 'reminders'

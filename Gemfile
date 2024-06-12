@@ -11,6 +11,8 @@ gem 'sidekiq'
 gem 'mail'
 gem 'dotenv-rails', groups: [:development, :test]
 gem 'pg'
+gem 'faker'
+
 
 
 
