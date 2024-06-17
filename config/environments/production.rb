@@ -7,6 +7,12 @@ Rails.application.configure do
   config.cache_classes = true
   config.time_zone = 'Nairobi'
 
+ # config/environments/production.rb
+Rails.application.configure do
+  config.action_cable.url = "wss://your_production_domain/cable"
+  config.action_cable.allowed_request_origins = [ 'https://your_production_domain', /https:\/\/your_production_domain.*/ ]
+  config.action_cable.cable = Rails.application.config_for(:cable)
+end
 
   # config/environments/development.rb or config/environments/production.rb
 config.action_mailer.delivery_method = :smtp

@@ -24,11 +24,21 @@ Rails.application.routes.draw do
       get 'received' 
       put 'decline'
       get 'sent'
+      get 'accepted'
     end
   end
   
-  
-  
+  resources :invitations, only: [:create] do
+    member do
+      post 'accept'
+      post 'decline'
+    end
+  end
+  # routes.rb (Rails example)
+get '/users', to: 'users#index', as: 'users'
+# routes.rb (Rails example)
+get '/friend_requests/:user_id/accepted', to: 'friend_requests#accepted', as: 'accepted_friend_requests'
+
   get '/users/search', to: 'users#search'
   get '/friend_requests/:user_id/accepted', to: 'friend_requests#accepted'
 
@@ -43,5 +53,7 @@ Rails.application.routes.draw do
       post 'send_notification_email' # Define a custom POST route for sending notification emails
     end
   end
-  
+
+    mount ActionCable.server => '/cable'
+
 end

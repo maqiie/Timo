@@ -12,6 +12,10 @@ gem 'mail'
 gem 'dotenv-rails', groups: [:development, :test]
 gem 'pg'
 gem 'faker'
+gem 'redis'  # Required for Action Cable (for development and production)
+# Gemfile
+gem 'httparty'
+
 
 
 

@@ -67,11 +67,13 @@ GEM
       minitest (>= 5.1)
       tzinfo (~> 2.0)
     bcrypt (3.1.19)
+    bigdecimal (3.1.8)
     builder (3.2.4)
     cancancan (3.5.0)
     concurrent-ruby (1.2.2)
     connection_pool (2.4.1)
     crass (1.0.6)
+    csv (3.3.0)
     date (3.3.3)
     debug (1.8.0)
       irb (>= 1.5.0)
@@ -95,6 +97,10 @@ GEM
       i18n (>= 1.8.11, < 2)
     globalid (1.1.0)
       activesupport (>= 5.0)
+    httparty (0.22.0)
+      csv
+      mini_mime (>= 1.0.0)
+      multi_xml (>= 0.5.2)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     io-console (0.6.0)
@@ -114,6 +120,8 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.5)
     minitest (5.19.0)
+    multi_xml (0.7.1)
+      bigdecimal (~> 3.1)
     net-imap (0.3.7)
       date
       net-protocol
@@ -165,6 +173,8 @@ GEM
       thor (~> 1.0)
       zeitwerk (~> 2.5)
     rake (13.0.6)
+    redis (5.2.0)
+      redis-client (>= 0.22.0)
     redis-client (0.22.2)
       connection_pool
     reline (0.3.7)
@@ -206,12 +216,14 @@ DEPENDENCIES
   devise_token_auth
   dotenv-rails
   faker
+  httparty
   jsonapi-serializer
   mail
   pg
   puma (~> 5.0)
   rack-cors
   rails (~> 7.0.7)
+  redis
   sidekiq
   sprockets-rails
   sqlite3 (~> 1.4)

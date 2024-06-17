@@ -61,6 +61,9 @@
 require_relative 'boot'
 
 require "rails"
+# config/application.rb
+require 'httparty'
+
 # Pick the frameworks you want:
 require "active_model/railtie"
 require "active_job/railtie"

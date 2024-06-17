@@ -1,14 +1,21 @@
 
 class Reminder < ApplicationRecord
-  belongs_to :user
-  belongs_to :note, optional: true
+  belongs_to :user  # Assuming 'user_id' is a foreign key in the reminders table
+
+  has_many :reminder_users, dependent: :destroy
+  has_many :users, through: :reminder_users  
   has_one :notification
   has_one_attached :attachment
   has_many :reminder_users
   has_many :users, through: :reminder_users
+  has_many :invitations
+  has_many :invited_users, through: :invitations, source: :user
+  has_many :tagged_users, through: :reminder_users, source: :user
+
 
   after_create :create_notification
-
+  
+  validates :user_id, presence: true
   validates :title, presence: true
   validates :due_date, presence: true
   validates :duration, presence: true
