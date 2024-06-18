@@ -28,11 +28,10 @@ Rails.application.routes.draw do
     end
   end
   
-  resources :invitations, only: [:create] do
-    member do
-      post 'accept'
-      post 'decline'
-    end
+  resources :invitations, only: [:index, :create, :update, :destroy] do
+    post 'accept', on: :member
+    post 'decline', on: :member
+    post 'reschedule', on: :member
   end
   # routes.rb (Rails example)
 get '/users', to: 'users#index', as: 'users'

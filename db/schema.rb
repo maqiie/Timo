@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_06_14_014830) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_18_011914) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -56,6 +56,17 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_14_014830) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "relationship_category"
+  end
+
+  create_table "friendships", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "friend_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "status"
+    t.integer "relationship_category"
+    t.index ["friend_id"], name: "index_friendships_on_friend_id"
+    t.index ["user_id"], name: "index_friendships_on_user_id"
   end
 
   create_table "invitations", force: :cascade do |t|
@@ -160,6 +171,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_14_014830) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "completed_tasks", "users"
+  add_foreign_key "friendships", "users"
+  add_foreign_key "friendships", "users", column: "friend_id"
   add_foreign_key "invitations", "reminders"
   add_foreign_key "invitations", "users"
   add_foreign_key "notes", "users"
