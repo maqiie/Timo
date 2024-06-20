@@ -476,18 +476,48 @@ class RemindersController < ApplicationController
     render json: convert_reminder_to_local_time(@reminder)
   end
 
+  # def create
+  #   reminder_params = parse_and_validate_reminder_params
+
+  #   @reminder = current_user.reminders.new(reminder_params.except(:user_ids))
+
+  #   begin
+  #     ActiveRecord::Base.transaction do
+  #       if @reminder.save
+  #         create_invitations(reminder_params[:user_ids], @reminder) if reminder_params[:user_ids].present?
+  #         handle_creation_notifications(@reminder)
+  #         handle_scheduled_notifications(@reminder) if @reminder.due_date > Time.current
+
+  #         render json: { status: 'success', message: 'Reminder created successfully', reminder: convert_reminder_to_local_time(@reminder) }, status: :created
+  #       else
+  #         render json: { status: 'error', message: 'Failed to create reminder', errors: @reminder.errors.full_messages }, status: :unprocessable_entity
+  #       end
+  #     end
+  #   rescue ArgumentError, ActiveRecord::RecordInvalid => e
+  #     handle_exception(e, :unprocessable_entity)
+  #   rescue StandardError => e
+  #     handle_exception(e, :internal_server_error)
+  #   end
+  # end
   def create
     reminder_params = parse_and_validate_reminder_params
-
+  
     @reminder = current_user.reminders.new(reminder_params.except(:user_ids))
-
+  
     begin
       ActiveRecord::Base.transaction do
         if @reminder.save
           create_invitations(reminder_params[:user_ids], @reminder) if reminder_params[:user_ids].present?
           handle_creation_notifications(@reminder)
           handle_scheduled_notifications(@reminder) if @reminder.due_date > Time.current
-
+  
+          # Broadcast notification
+          reminder_params[:user_ids].each do |user_id|
+            ActionCable.server.broadcast("notifications_#{user_id}", {
+              message: 'You have a new task assigned!'
+            })
+          end if reminder_params[:user_ids].present?
+  
           render json: { status: 'success', message: 'Reminder created successfully', reminder: convert_reminder_to_local_time(@reminder) }, status: :created
         else
           render json: { status: 'error', message: 'Failed to create reminder', errors: @reminder.errors.full_messages }, status: :unprocessable_entity
@@ -499,6 +529,7 @@ class RemindersController < ApplicationController
       handle_exception(e, :internal_server_error)
     end
   end
+  
 
   def update
     if @reminder.update(reminder_params)
