@@ -46,6 +46,11 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
+    active_storage_validations (1.1.4)
+      activejob (>= 5.2.0)
+      activemodel (>= 5.2.0)
+      activestorage (>= 5.2.0)
+      activesupport (>= 5.2.0)
     activejob (7.0.7)
       activesupport (= 7.0.7)
       globalid (>= 0.3.6)
@@ -67,7 +72,6 @@ GEM
       minitest (>= 5.1)
       tzinfo (~> 2.0)
     bcrypt (3.1.19)
-    bigdecimal (3.1.8)
     builder (3.2.4)
     cancancan (3.5.0)
     concurrent-ruby (1.2.2)
@@ -120,8 +124,7 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.5)
     minitest (5.19.0)
-    multi_xml (0.7.1)
-      bigdecimal (~> 3.1)
+    multi_xml (0.6.0)
     net-imap (0.3.7)
       date
       net-protocol
@@ -210,6 +213,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  active_storage_validations
   cancancan
   debug
   devise

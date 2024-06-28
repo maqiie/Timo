@@ -15,6 +15,6 @@ class ApplicationController < ActionController::Base
               def set_cors_headers
                 response.headers['Access-Control-Expose-Headers'] = 'Authorization'
               end
-    #         
+            
         end
 

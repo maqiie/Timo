@@ -4,6 +4,10 @@ Rails.application.routes.draw do
     registrations: 'auth/registrations'
   }
 
+
+  patch '/auth', to: 'auth/registrations#update'
+
+
   resources :reminders do
     collection do
       get 'index_by_date'

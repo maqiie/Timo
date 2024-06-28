@@ -1,5 +1,7 @@
 
 class User < ActiveRecord::Base
+  has_one_attached :image
+
 
   has_many :reminders
   has_many :reminder_users
@@ -8,7 +10,9 @@ class User < ActiveRecord::Base
   has_many :notifications
   has_many :invitations
   has_many :invited_reminders, through: :invitations, source: :reminder
- 
+
+  
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
   include DeviseTokenAuth::Concerns::User
@@ -21,6 +25,18 @@ class User < ActiveRecord::Base
   has_many :sent_friend_requests, class_name: 'FriendRequest', foreign_key: 'sender_id'
 
   # Association for received friend requests
+ 
+ 
+ 
   has_many :received_friend_requests, class_name: 'FriendRequest', foreign_key: 'receiver_id'
+  def as_json(options = {})
+    super(options.merge({ only: [:id, :email, :username, :name, :nickname, :birthday, :role, :uid], methods: [:image_url] }))
+  end
+
+  def image_url
+    image.attached? ? Rails.application.routes.url_helpers.rails_blob_url(image, only_path: true) : nil
+  end
+
 end
+
 

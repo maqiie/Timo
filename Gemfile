@@ -15,6 +15,8 @@ gem 'faker'
 gem 'redis'  # Required for Action Cable (for development and production)
 # Gemfile
 gem 'httparty'
+gem 'active_storage_validations'
+
 
 
 
