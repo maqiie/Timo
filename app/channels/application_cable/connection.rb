@@ -1,4 +1,4 @@
-# app/channels/application_cable/connection.rb
+
 module ApplicationCable
   class Connection < ActionCable::Connection::Base
     identified_by :current_user
@@ -10,9 +10,7 @@ module ApplicationCable
     private
 
     def find_verified_user
-      # Implement your logic to find and verify the user
-      # For example, using Devise:
-      if verified_user = env['warden'].user
+      if verified_user = User.find_by(auth_token: request.params[:token])
         verified_user
       else
         reject_unauthorized_connection

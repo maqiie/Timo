@@ -8,6 +8,7 @@ class Invitation < ApplicationRecord
   validates :reminder, presence: true  # Ensure this line exists
   validates :user_id, uniqueness: { scope: :reminder_id } # Ensure unique invitation per user for a reminder
   validates :status, inclusion: { in: %w[pending accepted declined] }
+  
   after_update_commit { broadcast_update }
   private
 

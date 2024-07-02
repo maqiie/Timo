@@ -1,7 +1,14 @@
 
 class NotificationsController < ApplicationController
   before_action :authenticate_user!
-
+  def broadcast
+    user = User.find(params[:user_id])
+    notification = { message: "Test notification", id: SecureRandom.uuid }
+    
+    NotificationsChannel.broadcast_to(user, notification)
+    
+    render json: { status: 'Notification sent' }
+  end
   def index
     @notifications = current_user.notifications
 

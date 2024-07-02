@@ -10,12 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_06_18_011914) do
+ActiveRecord::Schema[7.0].define(version: 2024_07_01_232517) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
-    t.bigint "record_id", null: false
-    t.bigint "blob_id", null: false
+    t.integer "record_id", null: false
+    t.integer "blob_id", null: false
     t.datetime "created_at", null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
@@ -34,7 +34,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_18_011914) do
   end
 
   create_table "active_storage_variant_records", force: :cascade do |t|
-    t.bigint "blob_id", null: false
+    t.integer "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
@@ -135,6 +135,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_18_011914) do
     t.boolean "completed"
     t.string "occasion"
     t.boolean "is_special_event", default: false
+    t.string "label"
     t.index ["note_id"], name: "index_reminders_on_note_id"
     t.index ["user_id"], name: "index_reminders_on_user_id"
   end
@@ -161,6 +162,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_18_011914) do
     t.integer "role"
     t.date "birthday"
     t.integer "receiver_id"
+    t.string "auth_token"
+    t.index ["auth_token"], name: "index_users_on_auth_token", unique: true
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["receiver_id"], name: "index_users_on_receiver_id"

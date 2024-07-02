@@ -1,9 +1,12 @@
 
 Rails.application.routes.draw do
-  mount_devise_token_auth_for 'User', at: 'auth', controllers: {
-    registrations: 'auth/registrations'
-  }
 
+  mount ActionCable.server => '/cable'
+
+  mount_devise_token_auth_for 'User', at: 'auth', controllers: {
+    registrations: 'auth/registrations',
+    sessions: 'auth/sessions'
+  }
 
   patch '/auth', to: 'auth/registrations#update'
 
@@ -56,7 +59,7 @@ get '/friend_requests/:user_id/accepted', to: 'friend_requests#accepted', as: 'a
       post 'send_notification_email' # Define a custom POST route for sending notification emails
     end
   end
+  post 'broadcast_notification', to: 'notifications#broadcast'
 
-    mount ActionCable.server => '/cable'
 
 end

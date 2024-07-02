@@ -4,12 +4,15 @@ class User < ActiveRecord::Base
 
 
   has_many :reminders
+
+
   has_many :reminder_users
   has_many :tagged_reminders, through: :reminder_users, source: :reminder
   has_many :notes
   has_many :notifications
   has_many :invitations
   has_many :invited_reminders, through: :invitations, source: :reminder
+
 
   
 
