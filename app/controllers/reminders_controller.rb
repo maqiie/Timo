@@ -135,10 +135,17 @@ class RemindersController < ApplicationController
     render json: { error: 'Reminder not found or unauthorized' }, status: :not_found unless @reminder
   end
 
+  # def reminder_params
+  #   params.require(:reminder).permit(:title, :description, :is_special_event, :occasion, :due_date, :repeat_interval, :repeat_interval_unit, :location, :priority, :calendar_id, :duration, user_ids: [])
+  # end
   def reminder_params
-    params.require(:reminder).permit(:title, :description, :is_special_event, :occasion, :due_date, :repeat_interval, :repeat_interval_unit, :location, :priority, :calendar_id, :duration, user_ids: [])
+    params.require(:reminder).permit(:title, :description, :is_special_event, :occasion, :due_date,
+                                     :repeat_interval, :repeat_interval_unit, :location, :priority,
+                                     :calendar_id, :duration, :custom_interval_value, :custom_interval_unit,
+                                     user_ids: [])
   end
-
+  
+  
   def send_creation_notification(reminder)
     time_remaining = distance_of_time_in_words(Time.current, reminder.due_date)
     message = "Created #{reminder.title} which is due in #{time_remaining}"
