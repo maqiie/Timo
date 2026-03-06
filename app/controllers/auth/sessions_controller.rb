@@ -1,31 +1,33 @@
-
-# app/controllers/auth/sessions_controller.rb
 class Auth::SessionsController < DeviseTokenAuth::SessionsController
-    respond_to :json
-  
-    def create
-      super do |user|
-        cookies.signed[:user_id] = { value: user.id, expires: 2.hours }
-      end
+  respond_to :json
+
+  def create
+    @user = User.find_by(email: params[:email]&.downcase&.strip)
+
+    unless @user&.valid_password?(params[:password])
+      return render json: {
+        status: 'error',
+        message: 'Invalid email or password.'
+      }, status: :unauthorized
     end
-  
-    def destroy
-      super do
-        cookies.delete(:user_id)
-      end
-    end
-  
-    private
-  
-    def respond_with(resource, _opts = {})
-      render json: {
-        status: { code: 200, message: 'Logged in successfully.' },
-        data: resource.as_json
-      }, status: :ok
-    end
-  
-    def respond_to_on_destroy
-      head :no_content
-    end
+
+    otp = rand(100_000..999_999).to_s
+    @user.update!(
+      otp_code: BCrypt::Password.create(otp),
+      otp_expires_at: 10.minutes.from_now
+    )
+
+    UserMailer.otp_email(@user, otp).deliver_now
+
+    render json: {
+      status: 'otp_required',
+      message: 'Credentials verified. Check your email for the OTP.',
+      email: @user.email
+    }, status: :ok
   end
-  
+
+  def destroy
+    cookies.delete(:user_id)
+    super
+  end
+end

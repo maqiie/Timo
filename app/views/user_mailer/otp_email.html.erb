@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <body style="font-family: sans-serif; background: #f8f8f6; padding: 40px;">
+    <div style="max-width: 480px; margin: 0 auto; background: white; border-radius: 12px; padding: 40px;">
+      <h2 style="color: #0d0d0d;">Hello, <%= @user.name %> 👋</h2>
+      <p style="color: #6b6b6b;">Your RemindApp verification code is:</p>
+      <div style="text-align: center; margin: 32px 0;">
+        <span style="font-size: 48px; font-weight: 700; letter-spacing: 12px; color: #3D6B8E;">
+          <%= @otp %>
+        </span>
+      </div>
+      <p style="color: #6b6b6b;">This code expires in <strong>10 minutes</strong>.</p>
+      <p style="color: #a3a3a3; font-size: 13px;">If you didn't request this, you can safely ignore this email.</p>
+    </div>
+  </body>
+</html>

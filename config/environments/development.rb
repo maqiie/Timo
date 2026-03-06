@@ -34,14 +34,17 @@ config.action_mailer.logger = Logger.new(STDOUT)
   # config/environments/development.rb or config/environments/production.rb
 config.action_mailer.delivery_method = :smtp
 config.action_mailer.smtp_settings = {
-  address:              'smtp.gmail.com',
-  port:                 587,
-  domain:               'example.com',
-  user_name:            ENV['GMAIL_USERNAME'],
-  password:             ENV['GMAIL_PASSWORD'],
-  authentication:       'plain',
-  enable_starttls_auto: true
-}
+    address:              'smtp.gmail.com',
+    port:                 587,
+    domain:               'gmail.com',
+    user_name:            'markpaul.dev@gmail.com',
+    password:             'wkjj ikpb yonf ecuk',
+    authentication:       'plain',
+    enable_starttls_auto: true
+  }
+  # config.action_mailer.default_url_options = { host: 'localhost', port: 3001 }
+  config.action_mailer.default_url_options = { host: '192.168.1.191', port: 3001 }
+
 
 
 

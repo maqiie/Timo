@@ -61,6 +61,10 @@ Rails.application.routes.draw do
   # Routes for notes
   resources :notes
 
+post '/auth/send_otp',   to: 'auth/otp#send_otp'
+post '/auth/verify_otp', to: 'auth/otp#verify_otp'
+post '/auth/resend_otp', to: 'auth/otp#resend_otp'
+
   # Routes for profiles
   resources :profiles, only: [:show, :edit, :update]
 

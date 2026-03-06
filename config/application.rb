@@ -44,6 +44,10 @@ module DeviseTokenAuthTwitter
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
+    # ── Allow ngrok tunnels ──────────────────────────────────────
+    config.hosts << /.*\.ngrok-free\.dev/
+    config.hosts << /.*\.ngrok\.io/
+
     # ここからコピペする
     config.session_store :cookie_store, key: '_interslice_session'
     config.middleware.use ActionDispatch::Cookies # Required for all session management
