@@ -120,6 +120,8 @@
 # end
 class Reminder < ApplicationRecord
   belongs_to :user
+  belongs_to :organization, optional: true
+
   has_many :reminder_users, dependent: :destroy
   has_many :users, through: :reminder_users
   has_one :notification

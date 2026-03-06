@@ -4,7 +4,10 @@ class Auth::RegistrationsController < DeviseTokenAuth::RegistrationsController
 
   def create
     super do |user|
-      user.update(role: User.first.nil? ? 'admin' : 'user')
+      if params[:user][:organization_registration]
+        organization = Organization.create(name: "#{user.name}'s Organization")
+        Membership.create(user: user, organization: organization, role: 'admin')
+      end
     end
   end
 
@@ -53,9 +56,16 @@ class Auth::RegistrationsController < DeviseTokenAuth::RegistrationsController
   private
 
   def sign_up_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation, :nickname)
+    params.require(:user).permit(:name, :email, :password, :password_confirmation, :nickname, :organization_registration)
   end
 
+  # Ensure `organization_registration` is permitted
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :email, :password, :password_confirmation, :nickname, :organization_registration])
+  end
+  
+  
+  
   def account_update_params
     params.require(:user).permit(:name, :email, :nickname, :birthday, :role, :uid, :image)
   end

@@ -18,7 +18,8 @@ gem 'httparty'
 gem 'active_storage_validations'
 
 
-
+# Gemfile
+gem 'rotp'          # TOTP/OTP generation
 
 
 
