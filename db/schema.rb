@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2026_03_06_043011) do
+ActiveRecord::Schema[7.0].define(version: 2026_03_08_033001) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -47,6 +47,15 @@ ActiveRecord::Schema[7.0].define(version: 2026_03_06_043011) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_completed_tasks_on_user_id"
+  end
+
+  create_table "conversations", force: :cascade do |t|
+    t.integer "sender_id", null: false
+    t.integer "recipient_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["recipient_id"], name: "index_conversations_on_recipient_id"
+    t.index ["sender_id", "recipient_id"], name: "index_conversations_on_sender_id_and_recipient_id", unique: true
   end
 
   create_table "friend_requests", force: :cascade do |t|
@@ -88,6 +97,18 @@ ActiveRecord::Schema[7.0].define(version: 2026_03_06_043011) do
     t.string "role"
     t.index ["organization_id"], name: "index_memberships_on_organization_id"
     t.index ["user_id"], name: "index_memberships_on_user_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.integer "conversation_id", null: false
+    t.integer "user_id", null: false
+    t.text "content", null: false
+    t.boolean "read", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_id", "created_at"], name: "index_messages_on_conversation_id_and_created_at"
+    t.index ["conversation_id"], name: "index_messages_on_conversation_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
   create_table "notes", force: :cascade do |t|
@@ -200,6 +221,7 @@ ActiveRecord::Schema[7.0].define(version: 2026_03_06_043011) do
   add_foreign_key "invitations", "users"
   add_foreign_key "memberships", "organizations"
   add_foreign_key "memberships", "users"
+  add_foreign_key "messages", "conversations"
   add_foreign_key "notes", "users"
   add_foreign_key "notifications", "users"
   add_foreign_key "reminder_users", "reminders"

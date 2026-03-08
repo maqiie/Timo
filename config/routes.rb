@@ -44,6 +44,15 @@ Rails.application.routes.draw do
     end
   end
 
+# Place them alongside the other resources
+
+ resources :conversations, only: [:index, :create] do
+  member do
+    get    :messages
+    post   :messages,  action: :create_message
+    patch  :mark_read
+  end
+end
   # Routes for invitations
   resources :invitations, only: [:index, :create, :update, :destroy] do
     post 'accept', on: :member

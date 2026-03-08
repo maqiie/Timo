@@ -1,9 +1,22 @@
+# app/controllers/users_controller.rb
 class UsersController < ApplicationController
+  before_action :authenticate_user!
+
+  def index
+    @users = User.select(:id, :name, :email).all
+    render json: @users
+  end
+
   def search
-    if params[:email].present?
-      @users = User.where("email LIKE ?", "%#{params[:email]}%")
+    query = params[:q] || params[:email]
+
+    if query.present?
+      @users = User.select(:id, :name, :email)
+                   .where("name LIKE ? OR email LIKE ?", "%#{query}%", "%#{query}%")
+                   .where.not(id: current_user.id) # exclude self
+                   .limit(20)
     else
-      @users = User.none
+      @users = []
     end
 
     render json: @users
