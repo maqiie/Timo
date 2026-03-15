@@ -1,10 +1,10 @@
-
 class Notification < ApplicationRecord
   belongs_to :user
-  belongs_to :reminder, optional: false # Ensure reminder is always present
+  belongs_to :reminder, optional: true
 
   scope :upcoming, -> { where('schedule >= ?', Time.current) }
-  validates :message, :schedule, :created_at, presence: true
-  validates :created_at, presence: true
 
+  validates :message,  presence: true
+  validates :schedule, presence: true
+  # ✅ created_at is set automatically by Rails — never validate it manually
 end

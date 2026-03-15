@@ -15,7 +15,7 @@ class Message < ApplicationRecord
   private
 
   def broadcast_message
-    ConversationChannel.broadcast_to(
+    ChatChannel.broadcast_to(
       conversation,
       {
         type:    'message',

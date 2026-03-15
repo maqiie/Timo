@@ -21,16 +21,25 @@ class ChatChannel < ApplicationCable::Channel
     content = data['content'].to_s.strip
     return if content.blank?
 
-    message = conversation.messages.create!(
+    conversation.messages.create!(
       user_id: current_user.id,
       content: content
     )
 
-    # Mark other user's messages as read
     conversation.messages
                 .where(read: false)
                 .where.not(user_id: current_user.id)
                 .update_all(read: true)
+  end
+
+  def typing(data)
+    conversation = Conversation.find_by(id: params[:conversation_id])
+    return unless conversation && authorized?(conversation)
+
+    broadcast_to(conversation, {
+      type:    'typing',
+      user_id: current_user.id,
+    })
   end
 
   private

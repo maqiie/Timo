@@ -19,12 +19,13 @@ end
 
 config.action_cable.allowed_request_origins = [
   'http://localhost:8081',
+  'http://localhost:19006',
   'http://localhost:3000',
   /http:\/\/192\.168\..*/,
   /http:\/\/10\..*/,
   /http:\/\/172\..*/,
+  /https:\/\/.*\.ngrok-free\.dev/,
 ]
-  config.active_storage.service = :local
 
 # config/environments/development.rb
 config.action_mailer.raise_delivery_errors = true
