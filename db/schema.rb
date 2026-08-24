@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2026_03_08_033001) do
+ActiveRecord::Schema[7.0].define(version: 2026_08_24_113727) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -137,6 +137,8 @@ ActiveRecord::Schema[7.0].define(version: 2026_03_08_033001) do
     t.integer "admin_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "category"
+    t.string "website"
   end
 
   create_table "posts", force: :cascade do |t|
@@ -175,7 +177,9 @@ ActiveRecord::Schema[7.0].define(version: 2026_03_08_033001) do
     t.string "occasion"
     t.boolean "is_special_event", default: false
     t.string "label"
+    t.integer "organization_id"
     t.index ["note_id"], name: "index_reminders_on_note_id"
+    t.index ["organization_id"], name: "index_reminders_on_organization_id"
     t.index ["user_id"], name: "index_reminders_on_user_id"
   end
 
@@ -227,5 +231,6 @@ ActiveRecord::Schema[7.0].define(version: 2026_03_08_033001) do
   add_foreign_key "reminder_users", "reminders"
   add_foreign_key "reminder_users", "users"
   add_foreign_key "reminders", "notes"
+  add_foreign_key "reminders", "organizations"
   add_foreign_key "reminders", "users"
 end

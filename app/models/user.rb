@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
   has_many :invited_reminders, through: :invitations, source: :reminder
   has_many :memberships, dependent: :destroy
   has_many :organizations, through: :memberships
-  belongs_to :organization, optional: true
+  # belongs_to :organization, optional: true
 
   # Enum for roles
   enum role: [:personal, :organization_admin, :worker]

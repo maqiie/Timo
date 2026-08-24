@@ -17,7 +17,8 @@ class Reminder < ApplicationRecord
   validates :title, :due_date, :duration, presence: true
   validates :repeat_interval_unit, inclusion: { in: %w(day week month) }, allow_blank: true
   validates :repeat_interval, presence: true, if: -> { repeat_interval_unit.present? }
-  validate :due_date_cannot_be_in_the_past
+validate :due_date_cannot_be_in_the_past, on: :create
+
 
   def add_user(user, relationship_category)
     reminder_users.create(user: user, relationship_category: relationship_category)
